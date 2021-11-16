@@ -1,9 +1,11 @@
 import Home from './pages/home';
+import ReactReduxDemo from './pages/react-redux-demo/ReactReduxDemo';
 
 function App() {
   return (
     <div className="App">
-      <Home></Home>
+      {/* <Home></Home> */}
+      <ReactReduxDemo></ReactReduxDemo>
     </div>
   );
 }
