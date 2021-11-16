@@ -1,5 +1,5 @@
 
-const initState = {value:'默认值'};
+const initState = {value:'默认值',count:0};
 
 const reducer = (state = initState, action) => {
   console.log('reducer',state,action );
@@ -8,7 +8,8 @@ const reducer = (state = initState, action) => {
     case 'send_type':
       
       return Object.assign({},state, action);
-  
+  case 'add_action':
+    return {...state, count: state.count + 1 }
     default:
       return state;
   }
