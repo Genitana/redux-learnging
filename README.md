@@ -53,3 +53,59 @@ redux 与 react 搭配起来更好用。
 - `connect( )`：这个方法能够使组件跟`store`来进行关联
    - `Provider` 内部组件如果想要使用到`state`中的数据，就必须要 `connect` 进行一层包裹封装，换一句话来说就是必须要被 `connect` 进行加强
    - connect就是方便我们组件能够获取到store中的state
+
+
+## 使用`react-redux`步骤
+1. 创建`reducer(state , action)`函数并导出 (纯函数，用原来对发来的action进行处理)
+
+2. 执行`createStore()`得到 store 并导出 （把上面的reducer传进来）
+    ```jsx
+    import { createStore } from "redux";
+    import {reducer} from '../reducer';
+
+    const store  = createStore(reducer);
+
+    export default store;
+    ```
+3. 用`Provider`包裹最顶层App，并且把store作为属性传下去。利用`Provider`包裹我们的结构，达到统一维护store的效果。
+    ```jsx
+        import {Provider} from  'react-redux';
+
+        <Provider store={store}>
+          <div className='react-redux-demo'>
+            <ComA></ComA>
+            <ComB></ComB>
+          </div>
+        </Provider>
+    ```
+
+4. 导入`connect(mapStateToProps, mapDispatchToProps)()`方法 
+    ```jsx
+    import {connect} from 'react-redux';
+    ```
+
+5. 对于发送方组件`ComA`，需要发送action，用`connect()`方法进行加强时，第二个参数`mapDispatchToProps`不能为空。因为不需要接收state，所以第一个参数可以传null。
+   - `mapDispatchToProps`方法需要返回一个对象，这个对象会返回到`ComA`组件的内部，所以`sendAction`可以直接从`ComA`的`props`中拿到
+
+    ```jsx
+        const mapDispatchToProps = (dispatch, ownProps) => {
+          return {
+            sendAction: () => {
+              dispatch({type:'add_action', count:10});
+            }
+          }
+        }; 
+        connect(null, mapDispatchToProps)(ComA);
+    ```
+
+6. 对于接收方组件`ComB`，需要接收到改变的`state`，用`connect()`方法进行加强时，第一个参数`mapStateToProps`不能为空，第二个参数可以不传。
+   - `mapStateToProps`方法也要返回一个对象，这个对象会返回到`ComB`组件的内部，所以`myvalue`可以直接在`ComB`的`props`中拿到。
+
+    ```jsx
+        const mapStateToProps = (state, ownProps) => {
+            return {
+              myvalue: state.count
+            }
+        };
+    ```
+
